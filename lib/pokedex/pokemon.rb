@@ -2,48 +2,46 @@ require './lib/pokedex'
 
 class Pokedex::Pokemon
   
-  attr_accessor :name, :number, :types
+  attr_accessor :name, :number, :url, :types, :species, :height, :weight, :abilities
   
   @@all = []
   
-  def initialize(name, number, types)
+  def initialize(name, number, url, types)
   @name = name
   @number = number
+  @url = url
   @types = types
   @@all << self
   end
   
   def self.all
     @@all
-    #pokemon = []
-    #pokemon << self.scrape_pokedex
-    #pokemon
   end
   
-  def self.scrape_pokedex
-    doc = Nokogiri::HTML(open("https://pokemondb.net/pokedex/national#gen-1"))
-    names = doc.css(".infocard-lg-data.text-muted .ent-name").text.split(/(?=[A-Z])/)[0..9]
-    numbers = doc.css(".infocard-lg-data.text-muted small").text.split(/[A-Za-z · ]/).reject {|i| i.empty?}[0..9]
-    types = doc.css(".infocard-lg-data.text-muted small").text.gsub(" ·", ",").split(/[^a-zA-z ,]/).reject {|i| i.empty?}[0..9]
-    
-    names.each_with_index do |name, i|
-      pokemon = self.new(name, numbers[i], types[i])
+  def self.find_by_name(user_input)
+    poke = self.all.find do |pokemon|
+      pokemon.name == user_input.capitalize
     end
-    @@all
-    #**Getting there
+    if poke != nil
+      Pokedex::Scraper.get_more_info(poke)
+    end
+    poke
   end
   
+  def self.find_by_number(user_input)
+    poke = Pokedex::Pokemon.all.find do |pokemon|
+      pokemon.number == "#" + user_input
+    end
+    if poke != nil
+      Pokedex::Scraper.get_more_info(poke)
+    end
+    poke
+  end
   
-  #def self.scrape_names()
-    #doc.css(".infocard-lg-data.text-muted .ent-name").text.split(/(?=[A-Z])/)[0..9]
-  #end
+  def self.list_of_types
+    self.all.collect do |pokemon|
+      pokemon.types.split(", ")
+    end.flatten.uniq.sort
+  end
   
-  #def self.scrape_numbers()
-    #doc.css(".infocard-lg-data.text-muted small").text.split(/[A-Za-z · ]/).reject {|i| i.empty?}[0..9]
-  #end
-  
-  #def self.scrape_types()
-    #doc.css(".infocard-lg-data.text-muted small").text.gsub("· ", "").split(/[^a-zA-z ]/).reject {|i| i.empty?}[0..9]
-  #end
-  #binding.pry
 end

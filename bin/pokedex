@@ -3,3 +3,4 @@
 require './lib/pokedex'
 
 Pokedex::CLI.new.welcome
+Pokedex::Scraper.initial_scrape
