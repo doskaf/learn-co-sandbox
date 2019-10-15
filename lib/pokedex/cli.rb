@@ -97,7 +97,6 @@ class Pokedex::CLI
   def type_list
     puts "----------------------------------------------------------------"
     Pokedex::Pokemon.list_of_types.each {|type| puts " #{type}"}
-    puts "----------------------------------------------------------------"
   end
   
   def what_next
