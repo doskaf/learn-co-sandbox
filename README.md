@@ -20,7 +20,7 @@ Or install it yourself as:
 
 ## Usage
 
-Start it up and start learning about your favorite Pokémon!
+Start it up and learn about your favorite Pokémon!
 
 ## Development
 
